@@ -1,8 +1,12 @@
 import React from "react";
+import 'TrackList.css';
 
-function TrackListing({ name, artist, album, id }) {
+function TrackList() {
   return (
-    <h1>Track Listing: {name}</h1>
+    <div className="TrackList">
+      {/* Add a map method here that renders a set of track components */}
+    </div>
 
   );
 };
+export default TrackList;
