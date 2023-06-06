@@ -1,13 +1,14 @@
 import React from 'react';
 import 'Track.css';
 
-function Track({ isRemoval }) {
+function renderAction({ isRemoval }) {
   
   if (isRemoval) {
     return <button className="Track-action">-</button>
   } else {
     return <button className='Track-action'>+</button>
   }
+
 
   return (
     <div className="Track">
@@ -16,6 +17,7 @@ function Track({ isRemoval }) {
         <p>Track artist will go here | Track album will go here</p>
       </div>
       <button className="Track-action">+ or - will go here</button>
+      {renderAction()}
     </div>
   );
 }
