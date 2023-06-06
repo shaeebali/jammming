@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from 'react-dom';
+import { useState   } from "react";
 import './App.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 
 function App() {
-  const [SearchResults, setSearchResults] = useState([
+  const [searchResults, setSearchResults] = useState([
     {
       name: "Example Track Name",
       artist: "Example Track Artist",
@@ -29,7 +30,7 @@ function App() {
           <SearchBar />
         <div className="App-playlist">
           {/* Add a SearchResults component here */}
-          <SearchResults />
+          <SearchResults searchResults={searchResults}/>
           {/* Add a Playlist component here */}
           <Playlist />
         </div>
