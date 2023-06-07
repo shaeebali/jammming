@@ -1,23 +1,30 @@
 import React from 'react';
 import './Track.css';
 
-function renderAction({ isRemoval }) {
-  
-  if (isRemoval) {
-    return <button className="Track-action">-</button>
+//Need to add track and remove track functionality:
+function Track(props) {
+  function renderButton() {
+    if (props.onAdd) {
+      return <button className="Track-button" onClick={handleAddTrack}>+</button>
   } else {
-    return <button className='Track-action'>+</button>
+      return <button className="Track-button" onClick={handleRemoveTrack}>+</button>
   }
-
+}
+function handleAddTrack() {
+  props.onAdd(props.track);
+}
+function handleRemoveTrack() {
+  props.onRemove(props.track);
+}
 
   return (
-    <div className="Track">
+    <div id={props.track.id} className="Track">
       <div className="Track-information">
         <h3>{props.track.name}</h3>
-        <p>{track.artist} | {track.album}</p>
+        <p>{props.track.artist} | {props.track.album}</p>
       </div>
-      <button className="Track-action">+ or - will go here</button>
-      {renderAction()}
+      <button className="Track-action"></button>
+      {renderButton()}
     </div>
   );
 }

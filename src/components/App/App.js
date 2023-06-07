@@ -22,6 +22,8 @@ function App() {
     },
   ])
 
+  const [playlistName, setPlaylistName] = useState('My playlist');
+
   return (
     <div>
       <h1>Ja<span className="highlight">mmm</span>ing</h1>
@@ -32,7 +34,7 @@ function App() {
           {/* Add a SearchResults component here */}
           <SearchResults searchResults={searchResults}/>
           {/* Add a Playlist component here */}
-          <Playlist />
+          <Playlist playlistName={playlistName}/>
         </div>
         </div>
     </div>
