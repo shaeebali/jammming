@@ -47,11 +47,8 @@ function App() {
     const foundTrack = playlistTracks.find((playlistTrack) => playListTrack.id === track.id
     );
     const newTrack = playlistTracks.concat(track);
-    if (foundTrack) {
-      console.log('Track already exists in the list!');
-    } else {
-      setPlaylistTracks({ playlistTracks: newTrack})
-    }
+    
+    foundTrack ? console.log('Track already exists in the list!') : setPlaylistTracks({ playlistTracks: newTrack});
   }
 
   return (
