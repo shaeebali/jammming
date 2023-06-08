@@ -38,17 +38,23 @@ function App() {
       artist: "Example Playlist Artist",
       album: "Example Playlist Album",
       id: 4,
+    },
+    {
+      name: "Example Playlist Name 2",
+      artist: "Example Playlist Artist 2",
+      album: "Example Playlist Album 2",
+      id: 5,
     }
   ]);
 
   //add additional functions below:
 
   function onAdd(track) {
-    const foundTrack = playlistTracks.find((playlistTrack) => playListTrack.id === track.id
+    const foundTrack = playlistTracks.find(playlistTrack => playlistTrack.id === track.id
     );
     const newTrack = playlistTracks.concat(track);
     
-    foundTrack ? console.log('Track already exists in the list!') : setPlaylistTracks({ playlistTracks: newTrack});
+    foundTrack ? console.log('Track already exists in the list!') : setPlaylistTracks(playlistTracks => [...playlistTracks, newTrack]);
   }
 
   return (
@@ -59,10 +65,15 @@ function App() {
           <SearchBar />
         <div className="App-playlist">
           {/* Add a SearchResults component here */}
-          <SearchResults searchResults={searchResults}
-          onAdd={onAdd}/>
+          <SearchResults 
+          searchResults={searchResults}
+          onAdd={onAdd}
+          />
           {/* Add a Playlist component here */}
-          <Playlist playlistName={playlistName} playlistTracks={playlistTracks}/>
+          <Playlist 
+          playlistName={playlistName} 
+          playlistTracks={playlistTracks}
+          />
         </div>
         </div>
     </div>
