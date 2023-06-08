@@ -7,6 +7,7 @@ import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 
 function App() {
+  //add state variables below:
   const [searchResults, setSearchResults] = useState([
     {
       name: "Example Track Name",
@@ -39,6 +40,19 @@ function App() {
       id: 4,
     }
   ]);
+
+  //add additional functions below:
+
+  function onAdd(track) {
+    const foundTrack = playlistTracks.find((playlistTrack) => playListTrack.id === track.id
+    );
+    const newTrack = playlistTracks.concat(track);
+    if (foundTrack) {
+      console.log('Track already exists in the list!');
+    } else {
+      setPlaylistTracks({ playlistTracks: newTrack})
+    }
+  }
 
   return (
     <div>

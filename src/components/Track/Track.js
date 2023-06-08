@@ -10,10 +10,10 @@ function Track(props) {
       return <button className="Track-button" onClick={handleRemoveTrack}>+</button>
   }
 }
-function handleAddTrack() {
+function handleAddTrack(props) {
   props.onAdd(props.track);
 }
-function handleRemoveTrack() {
+function handleRemoveTrack(props) {
   props.onRemove(props.track);
 }
 
