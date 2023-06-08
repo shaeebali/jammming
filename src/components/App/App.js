@@ -59,7 +59,8 @@ function App() {
           <SearchBar />
         <div className="App-playlist">
           {/* Add a SearchResults component here */}
-          <SearchResults searchResults={searchResults}/>
+          <SearchResults searchResults={searchResults}
+          onAdd={onAdd}/>
           {/* Add a Playlist component here */}
           <Playlist playlistName={playlistName} playlistTracks={playlistTracks}/>
         </div>
