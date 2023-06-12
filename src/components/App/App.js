@@ -54,13 +54,10 @@ function App() {
     if (!playlistTracks.find(playlistTrack => playlistTrack.id === track.id)) {
       setPlaylistTracks(playlistTracks => [...playlistTracks, track]);
     };
-    
-    // const foundTrack = playlistTracks.find(playlistTrack => playlistTrack.id === track.id
-    // );
-    // const newTrack = playlistTracks.concat(track);
-    // console.log(newTrack);
+  }
 
-    // foundTrack ? console.log('Track already exists in the list!') : setPlaylistTracks(playlistTracks => [...playlistTracks, newTrack]);
+  function onRemove(track) {
+    setPlaylistTracks(playlistTracks.filter(playlistTrack => playlistTrack.id !== track.id));
   }
 
   return (
@@ -80,6 +77,7 @@ function App() {
           playlistName={playlistName} 
           playlistTracks={playlistTracks}
           onAdd={onAdd}
+          onRemove={onRemove}
           />
         </div>
         </div>
