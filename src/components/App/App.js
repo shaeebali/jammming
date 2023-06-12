@@ -50,11 +50,17 @@ function App() {
   //add additional functions below:
 
   function onAdd(track) {
-    const foundTrack = playlistTracks.find(playlistTrack => playlistTrack.id === track.id
-    );
-    const newTrack = playlistTracks.concat(track);
     
-    foundTrack ? console.log('Track already exists in the list!') : setPlaylistTracks(playlistTracks => [...playlistTracks, newTrack]);
+    if (!playlistTracks.find(playlistTrack => playlistTrack.id === track.id)) {
+      setPlaylistTracks(playlistTracks => [...playlistTracks, track]);
+    };
+    
+    // const foundTrack = playlistTracks.find(playlistTrack => playlistTrack.id === track.id
+    // );
+    // const newTrack = playlistTracks.concat(track);
+    // console.log(newTrack);
+
+    // foundTrack ? console.log('Track already exists in the list!') : setPlaylistTracks(playlistTracks => [...playlistTracks, newTrack]);
   }
 
   return (
@@ -73,6 +79,7 @@ function App() {
           <Playlist 
           playlistName={playlistName} 
           playlistTracks={playlistTracks}
+          onAdd={onAdd}
           />
         </div>
         </div>

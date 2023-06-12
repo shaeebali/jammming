@@ -7,7 +7,7 @@ function Track(props) {
     if (props.onAdd) {
       return <button className="Track-button" onClick={handleAddTrack}>+</button>
   } else {
-      return <button className="Track-button" onClick={handleRemoveTrack}>+</button>
+      return <button className="Track-button" onClick={handleRemoveTrack}>-</button>
   }
 }
 function handleAddTrack() {
@@ -23,7 +23,7 @@ function handleRemoveTrack() {
         <h3>{props.track.name}</h3>
         <p>{props.track.artist} | {props.track.album}</p>
       </div>
-      <button className="Track-action"></button>
+      <button className="Track-button"></button>
       {renderButton()}
     </div>
   );
