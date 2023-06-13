@@ -11,7 +11,7 @@ function Playlist(props) {
   return (
     <div className="Playlist">
       <input 
-        defaultValue={"New Playlist"} 
+        defaultValue={props.name} 
         onChange={handleNameChange}
       />
       {/* Add a TrackList component here */}

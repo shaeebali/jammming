@@ -23,6 +23,8 @@ function App() {
     },
   ])
 
+  const [playlistTitle, setPlaylistTitle] = useState([]);
+
   const [playlistName, setPlaylistName] = useState([
     {
       name: "Example Playlist Name",
@@ -60,6 +62,14 @@ function App() {
     setPlaylistTracks(playlistTracks.filter(playlistTrack => playlistTrack.id !== track.id));
   }
 
+  function onNameChange(name) {
+    setPlaylistTitle(name);
+  }
+
+  function onSave() {
+    const trackURIs = playlistTracks.map(playlistTrack => playlistTrack.uri);
+  }
+
   return (
     <div>
       <h1>Ja<span className="highlight">mmm</span>ing</h1>
@@ -74,7 +84,8 @@ function App() {
           />
           {/* Add a Playlist component here */}
           <Playlist 
-          playlistName={playlistName} 
+          playlistName={playlistName}
+          onNameChange={onNameChange} 
           playlistTracks={playlistTracks}
           onAdd={onAdd}
           onRemove={onRemove}
