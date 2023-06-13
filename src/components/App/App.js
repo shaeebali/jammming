@@ -23,6 +23,8 @@ function App() {
     },
   ])
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const [playlistTitle, setPlaylistTitle] = useState([]);
 
   const [playlistName, setPlaylistName] = useState([
