@@ -70,12 +70,18 @@ function App() {
     const trackURIs = playlistTracks.map(playlistTrack => playlistTrack.uri);
   }
 
+  function onSearchTerm(term) {
+    console.log(term);
+  }
+
   return (
     <div>
       <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div class="App">
           {/* Add a SearchBar component here */}
-          <SearchBar />
+          <SearchBar 
+          onSearchTerm={onSearchTerm}
+          />
         <div className="App-playlist">
           {/* Add a SearchResults component here */}
           <SearchResults 
@@ -89,6 +95,7 @@ function App() {
           playlistTracks={playlistTracks}
           onAdd={onAdd}
           onRemove={onRemove}
+          onSave={onSave}
           />
         </div>
         </div>
