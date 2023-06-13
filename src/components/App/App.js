@@ -8,6 +8,8 @@ import Playlist from '../Playlist/Playlist';
 
 function App() {
   //add state variables below:
+  const [results, setResults] = useState([]);
+  
   const [searchResults, setSearchResults] = useState([
     {
       name: "Example Track Name",
@@ -75,6 +77,10 @@ function App() {
   function onSearchTerm(term) {
     console.log(term);
   }
+
+  // function onSearch(term) {
+  //   spotifySearch(term).then(setResults);
+  // }
 
   return (
     <div>

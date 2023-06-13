@@ -1,9 +1,9 @@
 import React from 'react';
 import './SearchBar.css';
 
-function SearchBar() {
+function SearchBar(props) {
 
-  const placeholder = props.searchTerm ? props.searchTerm : "Enter A Song, Album, or Artist";
+  const placeholder = props.searchTerm ? props.searchTerm : "Enter A Song, Album, or Artist!!!";
 
   function handleTermChange(event) {
     const newSearchTerm = event.target.value;
