@@ -53,7 +53,7 @@ async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("redirect_uri", "http://localhost:3000/callback");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
@@ -68,15 +68,37 @@ async function getAccessToken(clientId, code) {
 
 async function fetchProfile(token) {
   const result = await fetch("https://api.spotify.com/v1/me", {
-      method: "GET", headers: { Authorization: `Bearer ${token}` }
+    method: "GET", headers: { Authorization: `Bearer ${token}` }
   });
 
   return await result.json();
 }
 
-async function fetchProfile(profile) {
+async function spotifySearch(term, token) {
+  const response = await fetch(`https://api.spotify.com/v1/search?q=${term}"&type=artist,track,album`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
 
 }
+
+// complete this later and implement user profile data into the UI https://developer.spotify.com/documentation/web-api/howtos/web-app-profile
+
+// function populateUI(profile) {
+//   document.getElementById("displayName").innerText = profile.display_name;
+//   if (profile.images[0]) {
+//     const profileImage = new Image(200, 200);
+//     profileImage.src = profile.images[0].url;
+//     document.getElementById("avatar").appendChild(profileImage);
+//     document.getElementById("imgUrl").innerText = profile.images[0].url;
+//   }
+//   document.getElementById("id").innerText = profile.id;
+//   document.getElementById("email").innerText = profile.email;
+//   document.getElementById("uri").innerText = profile.uri;
+//   document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
+//   document.getElementById("url").innerText = profile.href;
+//   document.getElementById("url").setAttribute("href", profile.href);
+// }
 
 // export {spotify};
 
