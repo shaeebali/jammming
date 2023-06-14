@@ -10,7 +10,7 @@ function SearchBar(props) {
     props.onSearchTerm(newSearchTerm);
   }
   
-  function handleSearch(props) {
+  function handleSearch() {
     props.onSearch(props.searchTerm)
   }
 

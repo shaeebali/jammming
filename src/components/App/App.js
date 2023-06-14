@@ -5,6 +5,7 @@ import './App.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
+import { spotifySearch } from '../../util/Spotify';
 
 function App() {
   //add state variables below:
@@ -53,6 +54,8 @@ function App() {
     }
   ]);
 
+  const [playlists, setPlaylists] = useState([]);
+
   //add additional functions below:
 
   function onAdd(track) {
@@ -75,12 +78,12 @@ function App() {
   }
 
   function onSearchTerm(term) {
-    console.log(term);
+    setSearchTerm(term);
   }
 
-  // function onSearch(term) {
-  //   spotifySearch(term).then(setResults);
-  // }
+  function onSearch(term) {
+    spotifySearch(term).then(setResults);
+  }
 
   return (
     <div>
@@ -89,6 +92,8 @@ function App() {
           {/* Add a SearchBar component here */}
           <SearchBar 
           onSearchTerm={onSearchTerm}
+          searchTerm={searchTerm}
+          onSearch={onSearch}
           />
         <div className="App-playlist">
           {/* Add a SearchResults component here */}
