@@ -2,6 +2,8 @@ const clientId = 'bd8aba796b9249329067c9e5dd1b7e27';
 const params = new URLSearchParams(window.location.search);
 const code = params.get('code');
 
+let username;
+
 if (!code) {
   redirectToAuthCodeFlow(clientId);
 } else {
@@ -25,6 +27,19 @@ export async function redirectToAuthCodeFlow(clientId) {
   params.append("code_challenge", challenge);
 
   document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+}
+
+async function getUsername() {
+  if (username) {    
+    return username;
+  } else {
+    const response = await fetch("https://api.spotify.com/v1/me", {
+        headers: {Authorization: `Bearer ${token}`
+    });
+
+    const jsonResponse = await response.json();
+    username = jsonResponse.id;
+  }
 }
 
 function generateCodeVerifier(length) {
@@ -79,7 +94,28 @@ async function spotifySearch(term, token) {
     headers: { Authorization: `Bearer ${token}` }
   });
 
+  const jsonResponse = await response.json();
 
+  return jsonResponse.tracks.items.map(track => ({
+    id: track.id,
+    name: track.name,
+    artist: track.artists[0].name,
+    album: track.album.name,
+    uri: track.uri,
+    preview: track.preview_url
+  }));
+
+}
+
+async function savePlaylist(playlistName, savePlaylist, token) {
+  const responseNp = await fetch("https://api.spotify.com/v1/users/"+ username + "/playlists", {
+        method: "POST",
+        headers: { 
+            "Content-Type":"application/json",
+            "Authorization": "Bearer " + token
+        }, 
+        body: JSON.stringify({ name: playlistName })
+    });
 }
 
 // complete this later and implement user profile data into the UI https://developer.spotify.com/documentation/web-api/howtos/web-app-profile
