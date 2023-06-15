@@ -1,41 +1,15 @@
-//implement dotenv for client Id before final push to GitHub:
 const clientId = 'bd8aba796b9249329067c9e5dd1b7e27';
-const params = new URLSearchParams(window.location.search);
-const code = params.get('code');
-
+const redirectUri = 'http://localhost:3000';
+const url = 'https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-private&client_id=' + clientId + '&redirect_uri=' + redirectUri;
+let accessToken;
 let username;
-
-if (!code) {
-  redirectToAuthCodeFlow(clientId);
-} else {
-  const accessToken = await getAccessToken(clientId, code);
-  const profile = await fetchProfile(accessToken);
-  // populateUI(profile);
-}
-
-async function redirectToAuthCodeFlow(clientId) {
-  const verifier = generateCodeVerifier(128);
-  const challenge = await generateCodeChallenge(verifier);
-
-  localStorage.setItem("verifier", verifier);
-
-  const params = new URLSearchParams();
-  params.append("client_id", clientId);
-  params.append("response_type", "code");
-  params.append("redirect_uri", "http://localhost:3000/callback");
-  params.append("scope", "user-read-private user-read-email");
-  params.append("code_challenge_method", "S256");
-  params.append("code_challenge", challenge);
-
-  document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
-}
 
 async function getUsername() {
   if (username) {    
     return username;
   } else {
     const response = await fetch("https://api.spotify.com/v1/me", {
-        headers: {Authorization: `Bearer ${getAccessToken}`}
+        headers: {Authorization: "Bearer " + accessToken}
     });
 
     const jsonResponse = await response.json();
@@ -43,82 +17,70 @@ async function getUsername() {
   }
 }
 
-function generateCodeVerifier(length) {
-  let text = '';
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function getAccessToken() {
 
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
+    if(accessToken) {
+        return accessToken;    
+    }
 
-async function generateCodeChallenge(codeVerifier) {
-  const data = new TextEncoder().encode(codeVerifier);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
-  return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-}
+    let urlParams = new URLSearchParams(window.location.hash.slice(1));
+    let urlAccessToken = urlParams.get("access_token");
+    let urlExpiresIn = urlParams.get("expires_in");
 
-async function getAccessToken(clientId, code) {
-  const verifier = localStorage.getItem("verifier");
 
-    const params = new URLSearchParams();
-    params.append("client_id", clientId);
-    params.append("grant_type", "authorization_code");
-    params.append("code", code);
-    params.append("redirect_uri", "http://localhost:3000/callback");
-    params.append("code_verifier", verifier);
 
-    const result = await fetch("https://accounts.spotify.com/api/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params
+    if (urlAccessToken && urlExpiresIn) {
+
+        accessToken = urlAccessToken;
+        let expiresIn = urlExpiresIn;
+        setTimeout(() => {
+            accessToken = '';
+          }, expiresIn * 1000);
+
+        window.history.pushState({}, null, '/');
+          return accessToken;
+    } else {
+        console.log('Redirecting to authorization URL:', url);
+        window.location = url;
+    }
+};
+
+async function spotifySearch(term) {
+
+    accessToken = getAccessToken();
+    //includ limit (&limit=...) and track type in search.
+    const response = await fetch("https://api.spotify.com/v1/search?q=" + term + "&type=artist,track,album", {
+        headers: { Authorization: "Bearer " + accessToken }
     });
 
-    const { access_token } = await result.json();
-    return access_token;
-}
+    const jsonResponse = await response.json();
 
-async function fetchProfile(token) {
-  const result = await fetch("https://api.spotify.com/v1/me", {
-    method: "GET", headers: { Authorization: `Bearer ${token}` }
-  });
+    console.log("search obj return=", jsonResponse )
+    if (!jsonResponse.tracks) {
+        console.log('none returned')
+        return [];
+    };
 
-  return await result.json();
-}
-
-async function spotifySearch(token, term) {
-  const response = await fetch(`https://api.spotify.com/v1/search?q=${term}"&type=artist,track,album`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  console.log(response);
-
-  const jsonResponse = await response.json();
-  console.log(jsonResponse);
-
-  return jsonResponse.tracks.items.map(track => ({
-    id: track.id,
-    name: track.name,
-    artist: track.artists[0].name,
-    album: track.album.name,
-    uri: track.uri,
-    preview: track.preview_url
-  }));
-
-  console.log(jsonResponse);
-
-}
+    return jsonResponse.tracks.items.map(track => ({
+        id: track.id,
+        name: track.name,
+        artist: track.artists[0].name,
+        album: track.album.name,
+        uri: track.uri,
+        preview: track.preview_url
+    }));
+};
 
 async function savePlaylist(playlistName, saveList) {
-  const responseNp = await fetch("https://api.spotify.com/v1/users/"+ username + "/playlists", {
+
+    accessToken = getAccessToken();
+    getUsername();
+
+    const responseNp = await fetch("https://api.spotify.com/v1/users/"+ username + "/playlists", {
         method: "POST",
         headers: { 
             "Content-Type":"application/json",
-            "Authorization": `Bearer ${getAccessToken}`
+            "Authorization": "Bearer " + accessToken
         }, 
         body: JSON.stringify({ name: playlistName })
     });
@@ -127,35 +89,59 @@ async function savePlaylist(playlistName, saveList) {
 
     const playlistId = jsonResponseNp.id;
 
-    return await fetch(`https://api.spotify.com/v1/users/${username}/playlists/${playlistId}/tracks`, {
-      method: "POST",    
-      headers: {Authorization: `Bearer ${getAccessToken}`
-      },
-      body: JSON.stringify({ uris: saveList }),
+    return await fetch("https://api.spotify.com/v1/users/" +  username + "/playlists/" + playlistId + "/tracks", {
+        method: "POST",    
+        headers: {Authorization: "Bearer " + accessToken},
+        body: JSON.stringify({ uris: saveList }),
     });
-}
+};
 
-// complete this later and implement user profile data into the UI https://developer.spotify.com/documentation/web-api/howtos/web-app-profile
+async function getUserPlaylists() {
 
-// function populateUI(profile) {
-//   document.getElementById("displayName").innerText = profile.display_name;
-//   if (profile.images[0]) {
-//     const profileImage = new Image(200, 200);
-//     profileImage.src = profile.images[0].url;
-//     document.getElementById("avatar").appendChild(profileImage);
-//     document.getElementById("imgUrl").innerText = profile.images[0].url;
-//   }
-//   document.getElementById("id").innerText = profile.id;
-//   document.getElementById("email").innerText = profile.email;
-//   document.getElementById("uri").innerText = profile.uri;
-//   document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-//   document.getElementById("url").innerText = profile.href;
-//   document.getElementById("url").setAttribute("href", profile.href);
-// }
+    accessToken = getAccessToken();
+    await getUsername();
 
-// export {spotify};
 
-// https://api.spotify.com/v1/search?q=
-// https://api.spotify.com/v1/me
+    const response = await fetch("https://api.spotify.com/v1/users/" + username +"/playlists", {
+        headers: { Authorization: "Bearer " + accessToken }
+    });
 
-export { spotifySearch };
+
+    const jsonResponse = await response.json();
+
+    return jsonResponse.items.map(playlist => ({
+        id: playlist.id,
+        name: playlist.name,
+        }));
+    
+};
+
+async function getPlaylistTracks(playlistId) {
+
+    accessToken = getAccessToken();
+    await getUsername();
+
+    console.log ("token= " + accessToken)
+    console.log("Username= " + username)
+    console.log("Id= " + playlistId)
+
+    const response = await fetch("https://api.spotify.com/v1/users/" + username + "/playlists/" + playlistId + "/tracks", {
+        headers: { Authorization: "Bearer " + accessToken }
+    })
+
+    const jsonResponse = await response.json();
+
+    console.log("response= ", jsonResponse)
+
+    return jsonResponse.items.map(song => ({
+        id: song.track.id,
+        name: song.track.name,
+        artist: song.track.artists[0].name,
+        album: song.track.album.name,
+        uri: song.track.uri,
+        preview: song.track.preview_url
+    }));
+};
+
+
+export {spotifySearch, savePlaylist, getUserPlaylists, getPlaylistTracks};

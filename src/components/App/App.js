@@ -9,22 +9,9 @@ import { spotifySearch } from '../../util/Spotify';
 
 function App() {
   //add state variables below:
-  const [results, setResults] = useState([]);
+  // const [results, setResults] = useState([]);
   
-  const [searchResults, setSearchResults] = useState([
-    {
-      name: "Example Track Name",
-      artist: "Example Track Artist",
-      album: "Example Track Album",
-      id: 1,
-    },
-    {
-      name: "Example Track Name 2",
-      artist: "Example Track Artist 2",
-      album: "Example Track Album 2",
-      id: 2,
-    },
-  ])
+  const [searchResults, setSearchResults] = useState([])
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -82,7 +69,7 @@ function App() {
   }
 
   function onSearch(term) {
-    spotifySearch(term).then(setResults);
+    spotifySearch(term).then(setSearchResults);
   }
 
   return (
