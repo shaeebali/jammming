@@ -17,29 +17,9 @@ function App() {
 
   const [playlistTitle, setPlaylistTitle] = useState([]);
 
-  const [playlistName, setPlaylistName] = useState([
-    {
-      name: "Example Playlist Name",
-      artist: "Example Playlist Artist",
-      album: "Example Playlist Album",
-      id: 3,
-    }
-  ]);
+  const [playlistName, setPlaylistName] = useState([]);
   
-  const [playlistTracks, setPlaylistTracks] = useState([
-    {
-      name: "Example Playlist Name",
-      artist: "Example Playlist Artist",
-      album: "Example Playlist Album",
-      id: 4,
-    },
-    {
-      name: "Example Playlist Name 2",
-      artist: "Example Playlist Artist 2",
-      album: "Example Playlist Album 2",
-      id: 5,
-    }
-  ]);
+  const [playlistTracks, setPlaylistTracks] = useState([]);
 
   const [playlists, setPlaylists] = useState([]);
 
